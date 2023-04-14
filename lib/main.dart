@@ -1,4 +1,5 @@
 import 'package:coursditi/screens/home_page.dart';
+import 'package:coursditi/screens/navigation_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Orange et Moi'),
+      //home: const MyHomePage(title: 'Orange et Moi'),
+      home: const NavigationPage(),
     );
   }
 }

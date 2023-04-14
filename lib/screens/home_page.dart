@@ -1,26 +1,27 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:coursditi/models/conso.dart';
 import 'package:coursditi/models/feature.dart';
 import 'package:coursditi/utils/constant.dart';
-import 'package:coursditi/widgets/pub_carousel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+import '../widgets/carousel/carousel_pro.dart';
 
-  final String title;
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({
+    super.key,
+  });
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Conso> consoList = [];
   bool showAmount = false;
   late ScrollController controller;
   bool isExpanded = true;
-  late List<Widget> imageSliders=[];
+  late List<Widget> imageSliders = [];
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
     'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
@@ -29,8 +30,6 @@ class _MyHomePageState extends State<MyHomePage> {
     'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
-
-
 
   @override
   void initState() {
@@ -70,50 +69,205 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     imageSliders = imgList
         .map((item) => Container(
-      child: Container(
-        margin: EdgeInsets.all(5.0),
-        child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            child: Stack(
-              children: <Widget>[
-                Image.network(item, fit: BoxFit.cover, width: 1000.0),
-                Positioned(
-                  bottom: 0.0,
-                  left: 0.0,
-                  right: 0.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(200, 0, 0, 0),
-                          Color.fromARGB(0, 0, 0, 0)
-                        ],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                      ),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 20.0),
-                    child: Text(
-                      'No. ${imgList.indexOf(item)} image',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )),
-      ),
-    ))
+              child: Container(
+                margin: const EdgeInsets.all(5.0),
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                    child: Stack(
+                      children: <Widget>[
+                        Image.network(item, fit: BoxFit.cover, width: 1000.0),
+                        Positioned(
+                          bottom: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromARGB(200, 0, 0, 0),
+                                  Color.fromARGB(0, 0, 0, 0)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                            child: Text(
+                              'No. ${imgList.indexOf(item)} image',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            ))
         .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      drawer: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Drawer(
+          backgroundColor: Colors.white,
+          child: Column(
+            children: [
+              DrawerHeader(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(35),
+                              border: Border.all(color: primaryColor)),
+                          height: 60,
+                          width: 60,
+                          child: Image.asset(
+                            "assets/images/profile.png",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            scaffoldKey.currentState!.closeDrawer();
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: const Icon(Icons.clear),
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      "Sidy Konteye",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        print("Open Profile");
+                      },
+                      child: const Text(
+                        "Editer mon compte",
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 200,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Mes lignes",
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            print("Open Profile");
+                          },
+                          child: const Text(
+                            "Gérer mes lignes",
+                            style: TextStyle(
+                                color: primaryColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 120,
+                      child: ListView(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          Container(
+                            width: 120,
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: Colors.green)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                    const Icon(
+                                      Icons.sim_card_outlined,
+                                      size: 35,
+                                    ),
+                                    Radio(
+                                      value: true,
+
+                                      onChanged: (value) {}, groupValue: null,
+                                    )
+                                  ],
+                                ),
+                                const Text(
+                                  "77 777 77 77",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  "Jamono New S'cool",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
       body: CustomScrollView(
         controller: controller,
         slivers: [
@@ -127,9 +281,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             centerTitle: true,
             backgroundColor: Colors.white,
-            leading: const Icon(
-              Icons.menu_rounded,
-              color: Colors.black,
+            leading: InkWell(
+              onTap: () {
+                scaffoldKey.currentState!.openDrawer();
+              },
+              child: const Icon(
+                Icons.menu_rounded,
+                color: Colors.black,
+              ),
             ),
             actions: [
               !isExpanded
@@ -360,7 +519,40 @@ class _MyHomePageState extends State<MyHomePage> {
                 const SizedBox(
                   height: 50,
                 ),
-                PubCarousel(slide: imageSliders)
+                Container(
+                  height: 100.0,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Carousel(
+                      boxFit: BoxFit.cover,
+                      dotColor: Colors.black,
+                      dotSize: 7,
+                      dotSpacing: 16.0,
+                      dotPosition: DotPosition.bottomLeft,
+                      dotIncreasedColor: Colors.white,
+                      dotBgColor: Colors.transparent,
+                      showIndicator: true,
+                      overlayShadow: false,
+                      overlayShadowColors: Colors.white.withOpacity(0.2),
+                      overlayShadowSize: 0.9,
+                      images: [
+                        NetworkImage(imgList[0]),
+                        NetworkImage(imgList[1]),
+                        NetworkImage(imgList[2]),
+                        NetworkImage(imgList[3]),
+                      ],
+                      onImageChange: (img, s) {},
+                      onImageTap: (img) {},
+                      radius: const Radius.circular(1.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 100,
+                ),
               ],
             ),
           )
