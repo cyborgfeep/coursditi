@@ -1,5 +1,7 @@
 import 'package:coursditi/screens/home_page.dart';
 import 'package:coursditi/screens/navigation_page.dart';
+import 'package:coursditi/screens/splash_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       //home: const MyHomePage(title: 'Orange et Moi'),
-      home: const NavigationPage(),
+      home: const SplashScreen(),
     );
   }
 }

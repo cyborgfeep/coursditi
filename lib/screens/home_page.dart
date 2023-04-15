@@ -1,8 +1,11 @@
 import 'package:coursditi/models/conso.dart';
 import 'package:coursditi/models/feature.dart';
+import 'package:coursditi/screens/splash_screen.dart';
 import 'package:coursditi/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 
 import '../widgets/carousel/carousel_pro.dart';
 
@@ -15,12 +18,19 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
+}
+
 class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<Conso> consoList = [];
   bool showAmount = false;
   late ScrollController controller;
   bool isExpanded = true;
+  bool isFaceActivated = false;
   late List<Widget> imageSliders = [];
   final List<String> imgList = [
     'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
@@ -30,7 +40,6 @@ class _MyHomePageState extends State<MyHomePage> {
     'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
-
   @override
   void initState() {
     super.initState();
@@ -108,7 +117,10 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ))
         .toList();
+
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -236,8 +248,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                     Radio(
                                       value: true,
-
-                                      onChanged: (value) {}, groupValue: null,
+                                      onChanged: (value) {},
+                                      groupValue: null,
                                     )
                                   ],
                                 ),
@@ -258,6 +270,70 @@ class _MyHomePageState extends State<MyHomePage> {
                               ],
                             ),
                           )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                height: 200,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text(
+                          "Sécurité",
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Image.asset(
+                                "assets/images/faceid.png",
+                                width: 30,
+                                height: 30,
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children:  [
+                                  const Text(
+                                    "Face ID/Touch ID",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 16),
+                                  ),
+                                  Text(
+                                    canCheckBiometrics!?"Activer/Désactiver FaceID":"Oups ça ne marche pas",
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          canCheckBiometrics!?CupertinoSwitch(
+                              value: isFaceActivated,
+                              onChanged: (val) {
+                                setState(() {
+                                  isFaceActivated = val;
+                                });
+                              }):const SizedBox.shrink()
                         ],
                       ),
                     )
