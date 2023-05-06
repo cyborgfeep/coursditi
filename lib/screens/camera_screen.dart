@@ -15,6 +15,7 @@ class _CameraScreenState extends State<CameraScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
   QRViewController? controller;
+  bool isFlash=false;
 
   @override
   void reassemble() {
@@ -49,17 +50,38 @@ class _CameraScreenState extends State<CameraScreen> {
             MediaQuery.of(context).size.height < 400)
         ? 300.0
         : 300.0;
-    return SafeArea(
-        child: QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      formatsAllowed: [BarcodeFormat.qrcode],
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.white,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-    ));
+    return Scaffold(
+      body: SafeArea(
+          child: Stack(
+            children: [
+              QRView(
+                key: qrKey,
+                onQRViewCreated: _onQRViewCreated,
+                formatsAllowed: [BarcodeFormat.qrcode],
+                overlay: QrScannerOverlayShape(
+                    borderColor: Colors.white,
+                    borderRadius: 10,
+                    borderLength: 30,
+                    borderWidth: 10,
+                    cutOutSize: scanArea),
+              ),
+              Positioned(
+                top: 20,
+                right: 16,
+                child: InkWell(
+                  onTap: (){
+                    controller!.toggleFlash();
+                    controller!.getFlashStatus().then((value) {
+                      setState(() {
+                        isFlash=value!;
+                      });
+                    });
+                  },
+                  child: Icon(isFlash?Icons.flash_off:Icons.flash_on,color:Colors.white),
+                ),
+              )
+            ],
+          )),
+    );
   }
 }

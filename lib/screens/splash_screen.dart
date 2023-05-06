@@ -1,9 +1,11 @@
+import 'package:coursditi/screens/camera_screen.dart';
 import 'package:coursditi/screens/navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_ios/local_auth_ios.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -101,8 +103,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    auth.isDeviceSupported().then((bool isSupported) {
-      if(isSupported){
+    /*auth.isDeviceSupported().then((bool isSupported) {
+      if (isSupported) {
         _checkBiometrics().then((value) {
           _getAvailableBiometrics().then((value) {
             Navigator.push(context, MaterialPageRoute(
@@ -113,14 +115,31 @@ class _SplashScreenState extends State<SplashScreen> {
             authenticateWithBiometrics();
           });
         });
-      }else{
+      } else {
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
             return const NavigationPage();
           },
         ));
       }
+    });*/
+    SharedPreferences.getInstance().then((prefs) {
+      if(prefs.getBool("isFirstOpen")!=null && prefs.getBool("isFirstOpen")!){
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const CameraScreen();
+          },
+        ));
+      }else{
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const NavigationPage();
+          },
+        ));
+
+      }
     });
+
   }
 
   @override

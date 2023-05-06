@@ -2,6 +2,7 @@ import 'package:coursditi/screens/home_page.dart';
 import 'package:coursditi/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({Key? key}) : super(key: key);
@@ -12,6 +13,14 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage> {
   int currentIndex = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      prefs.setBool("isFirstOpen", true);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
