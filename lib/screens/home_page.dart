@@ -1,11 +1,11 @@
 import 'package:coursditi/models/conso.dart';
 import 'package:coursditi/models/feature.dart';
+import 'package:coursditi/screens/camera_screen.dart';
 import 'package:coursditi/screens/splash_screen.dart';
 import 'package:coursditi/utils/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 
 import '../widgets/carousel/carousel_pro.dart';
 
@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
+
   @override
   void initState() {
     super.initState();
@@ -117,10 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ))
         .toList();
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +310,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:  [
+                                children: [
                                   const Text(
                                     "Face ID/Touch ID",
                                     style: TextStyle(
@@ -320,20 +318,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                         fontSize: 16),
                                   ),
                                   Text(
-                                    canCheckBiometrics!?"Activer/Désactiver FaceID":"Oups ça ne marche pas",
+                                    canCheckBiometrics!
+                                        ? "Activer/Désactiver FaceID"
+                                        : "Oups ça ne marche pas",
                                     style: const TextStyle(color: Colors.grey),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                          canCheckBiometrics!?CupertinoSwitch(
-                              value: isFaceActivated,
-                              onChanged: (val) {
-                                setState(() {
-                                  isFaceActivated = val;
-                                });
-                              }):const SizedBox.shrink()
+                          canCheckBiometrics!
+                              ? CupertinoSwitch(
+                                  value: isFaceActivated,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      isFaceActivated = val;
+                                    });
+                                  })
+                              : const SizedBox.shrink()
                         ],
                       ),
                     )
@@ -373,9 +375,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Icon(Icons.search, color: Colors.black),
                     )
                   : const SizedBox.shrink(),
-              const Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: Icon(Icons.qr_code, color: Colors.black),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return CameraScreen();
+                        },
+                      ));
+                },
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 16),
+                  child: Icon(Icons.qr_code, color: Colors.black),
+                ),
               )
             ],
             elevation: 0,

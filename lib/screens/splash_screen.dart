@@ -12,12 +12,14 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-bool? canCheckBiometrics;
+bool? canCheckBiometrics=false;
 List<BiometricType>? availableBiometrics;
+
 class _SplashScreenState extends State<SplashScreen> {
   final LocalAuthentication auth = LocalAuthentication();
   String _authorized = 'Not Authorized';
   bool _isAuthenticating = false;
+
   Future<void> _checkBiometrics() async {
     late bool canCheckBiometric;
     try {
@@ -34,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       canCheckBiometrics = canCheckBiometric;
     });
   }
+
   Future<void> _getAvailableBiometrics() async {
     late List<BiometricType> availableBiometric;
     try {
@@ -50,6 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
       availableBiometrics = availableBiometric;
     });
   }
+
   Future<void> authenticateWithBiometrics() async {
     bool authenticated = false;
     try {
@@ -59,12 +63,12 @@ class _SplashScreenState extends State<SplashScreen> {
       });
       authenticated = await auth.authenticate(
           localizedReason:
-          'Scan your fingerprint (or face or whatever) to authenticate',
+              'Scan your fingerprint (or face or whatever) to authenticate',
           options: const AuthenticationOptions(
             stickyAuth: true,
             biometricOnly: true,
           ),
-          authMessages:  <AuthMessages>[
+          authMessages: <AuthMessages>[
             AndroidAuthMessages(
               signInTitle: 'Oops! Biometric authentication required!',
               cancelButton: 'No thanks',
@@ -72,8 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
             IOSAuthMessages(
               cancelButton: 'No thanks',
             ),
-          ]
-      );
+          ]);
       setState(() {
         _isAuthenticating = false;
         _authorized = 'Authenticating';
@@ -94,18 +97,29 @@ class _SplashScreenState extends State<SplashScreen> {
       _authorized = message;
     });
   }
+
   @override
   void initState() {
     super.initState();
-    _checkBiometrics().then((value) {
-     _getAvailableBiometrics().then((value) {
-       Navigator.push(context, MaterialPageRoute(
-         builder: (context) {
-           return const NavigationPage();
-         },
-       ));
-       authenticateWithBiometrics();
-     });
+    auth.isDeviceSupported().then((bool isSupported) {
+      if(isSupported){
+        _checkBiometrics().then((value) {
+          _getAvailableBiometrics().then((value) {
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context) {
+                return const NavigationPage();
+              },
+            ));
+            authenticateWithBiometrics();
+          });
+        });
+      }else{
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const NavigationPage();
+          },
+        ));
+      }
     });
   }
 
